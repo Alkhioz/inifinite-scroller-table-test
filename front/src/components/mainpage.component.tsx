@@ -46,7 +46,7 @@ function MainPage() {
     if(!scrollController.current) return;
     const { scrollTop, clientHeight, scrollHeight } = scrollController.current;
     const currentPosition = Math.round(scrollTop + clientHeight);
-    const flag = scrollHeight - (currentPosition*0.2);
+    const flag = scrollHeight - (scrollHeight*0.2);
     if(currentPosition >= flag){
       optimizedUpdatePage();
       optimizedFetch();
@@ -57,7 +57,7 @@ function MainPage() {
     <div className='w-full h-full relative'>
       <div className='w-full h-full flex flex-col justify-center items-center p-2 gap-2'>
         <h1>Infinite scroll table</h1>
-        <div className='w-full h-full max-w-screen-xl max-h-96 bg-white text-black relative overflow-hidden'>
+        <div className='w-full h-full max-w-screen-xl max-h-96 bg-white text-black overflow-hidden'>
           <Table
             headers={[
               {
