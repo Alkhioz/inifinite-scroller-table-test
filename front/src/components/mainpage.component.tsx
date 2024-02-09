@@ -13,15 +13,17 @@ function MainPage() {
     isError,
     isPending
   });
-  useEffect(()=>{
+  useEffect(() => {
     fetch({
-      page:1,
-      maxNumber:10,
+      page: 1,
+      maxNumber: 10,
     });
   }, []);
 
   return (
-    <>hola</>
+    <div className='w-full h-full grid justify-center items-center'>
+      hello
+    </div>
   )
 }
 
