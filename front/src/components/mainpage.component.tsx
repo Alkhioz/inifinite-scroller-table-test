@@ -1,25 +1,57 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useData } from '../hooks/usedata.hook';
 import { Table } from './table/table.component';
+import { debounce } from '../utils/debounce';
 
 function MainPage() {
+  const scrollController = useRef<any>(null);
+  const page = useRef<number>(1);
+  const MAX_NUMBER = 10;
+  const [ cachedItems, setCachedItems ] = useState<any>([]);
   const {
     fetch,
     data,
     isError,
     isPending
   } = useData();
-  console.log({
-    data,
-    isError,
-    isPending
-  });
-  useEffect(() => {
+
+  const doFetch = () => {
     fetch({
-      page: 1,
-      maxNumber: 10,
+      page: page.current,
+      maxNumber: MAX_NUMBER,
     });
+  }
+
+  const updatePage = () => {
+    page.current = page.current + 1;
+  }
+
+  const optimizedFetch = useCallback(debounce(doFetch), []);
+  const optimizedUpdatePage = useCallback(debounce(updatePage), []);
+
+  useEffect(() => {
+    optimizedFetch();
   }, []);
+
+  useEffect(()=>{
+    if(!isError && !isPending && data){
+      setCachedItems([
+        ...cachedItems,
+        ...data,
+      ]);
+    }
+  }, [data, isPending, isError]);
+
+  const handleScroll = () => {
+    if(!scrollController.current) return;
+    const { scrollTop, clientHeight, scrollHeight } = scrollController.current;
+    const currentPosition = Math.round(scrollTop + clientHeight);
+    const flag = scrollHeight - (currentPosition*0.2);
+    if(currentPosition >= flag){
+      optimizedUpdatePage();
+      optimizedFetch();
+    }
+  }
 
   return (
     <div className='w-full h-full relative'>
@@ -61,7 +93,9 @@ function MainPage() {
                 key: 'totalDebt'
               },
             ]}
-            data={data}
+            data={cachedItems}
+            scrollController={scrollController}
+            handleScroll={handleScroll}
           />
         </div>
       </div>
