@@ -14,7 +14,10 @@ function MainPage() {
     isPending
   });
   useEffect(()=>{
-    fetch({data:'hola mundo'});
+    fetch({
+      page:1,
+      maxNumber:10,
+    });
   }, []);
 
   return (
