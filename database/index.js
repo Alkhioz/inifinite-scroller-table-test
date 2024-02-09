@@ -22,7 +22,8 @@ const startDate = new Date(2000, 0, 1); // January 1, 2000
   const records = [];
   for (let i = 0; i < numRecords; i++) {
     records.push({
-      id: uuidv4(),
+      id: i,
+      uuid: uuidv4(),
       name: generateRandomString(10),
       lastName: generateRandomString(10),
       initialDate: generateRandomDate(startDate, endDate),
@@ -36,8 +37,8 @@ const startDate = new Date(2000, 0, 1); // January 1, 2000
   return records;
 }
 
-const millionRecords = generateRecords(1000000);
-const filePath = path.join(__dirname, 'bin', 'data.json');
+const millionRecords = generateRecords(10000);
+const filePath = path.join(__dirname, '../back/src/data', 'data.json');
 fs.mkdirSync(path.dirname(filePath), { recursive: true });
 fs.writeFileSync(filePath, JSON.stringify(millionRecords, null, 2));
 console.log(`Data successfully saved to ${filePath}`);
